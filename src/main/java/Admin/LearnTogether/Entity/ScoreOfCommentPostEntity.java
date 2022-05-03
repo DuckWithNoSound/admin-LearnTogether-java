@@ -1,10 +1,20 @@
 package Admin.LearnTogether.Entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
 /*
   Created by Luvbert
 */
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "score_of_comment_post")
 public class ScoreOfCommentPostEntity {
@@ -24,35 +34,4 @@ public class ScoreOfCommentPostEntity {
     @JoinColumn(name = "user_id")
     private UserEnity user;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Byte getScoreType() {
-        return scoreType;
-    }
-
-    public void setScoreType(Byte scoreType) {
-        this.scoreType = scoreType;
-    }
-
-    public CommentPostEntity getCommentPost() {
-        return commentPost;
-    }
-
-    public void setCommentPost(CommentPostEntity commentPost) {
-        this.commentPost = commentPost;
-    }
-
-    public UserEnity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEnity user) {
-        this.user = user;
-    }
 }

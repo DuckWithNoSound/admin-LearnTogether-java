@@ -1,5 +1,9 @@
 package Admin.LearnTogether.Entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
@@ -9,6 +13,11 @@ import java.util.List;
 /*
   Created by Luvbert
 */
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "post")
 public class PostEntity extends BaseEntity {
@@ -41,67 +50,4 @@ public class PostEntity extends BaseEntity {
     @JoinTable(name = "post_tag_mtm", joinColumns = @JoinColumn(name = "post_id"), inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<TagEntity> tags = new ArrayList<>();
 
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
-    public Integer getViewNumber() {
-        return viewNumber;
-    }
-
-    public void setViewNumber(Integer viewNumber) {
-        this.viewNumber = viewNumber;
-    }
-
-    public List<TagEntity> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<TagEntity> tags) {
-        this.tags = tags;
-    }
-
-    public UserEnity getUser() {
-        return user;
-    }
-
-    public void setUser(UserEnity user) {
-        this.user = user;
-    }
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
-
-    public List<CommentPostEntity> getCommentsPost() {
-        return commentsPost;
-    }
-
-    public void setCommentsPost(List<CommentPostEntity> commentsPost) {
-        this.commentsPost = commentsPost;
-    }
 }

@@ -4,8 +4,18 @@ package Admin.LearnTogether.Entity;
   Created by Luvbert
 */
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
+
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "score")
 public class ScorePostEntity {
@@ -24,35 +34,4 @@ public class ScorePostEntity {
     @JoinColumn(name = "user_id")
     private UserEnity user;
 
-    public Byte getScoreType() {
-        return scoreType;
-    }
-
-    public void setScoreType(Byte scoreType) {
-        this.scoreType = scoreType;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public PostEntity getPost() {
-        return post;
-    }
-
-    public void setPost(PostEntity post) {
-        this.post = post;
-    }
-
-    public void setUser(UserEnity user) {
-        this.user = user;
-    }
-
-    public UserEnity getUser() {
-        return user;
-    }
 }
