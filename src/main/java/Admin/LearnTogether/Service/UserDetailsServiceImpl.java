@@ -42,7 +42,7 @@ public class UserDetailsServiceImpl implements UserDetailsService{
 
     private UserDetails putUserEntityToUserDetail(UserEnity userEnity){
         List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(userEnity.getRole().getId() + ""));
+        authorities.add(new SimpleGrantedAuthority(userEnity.getRole().getRoleName()));
         // Put user's information to spring security store
         UserDetail user = new UserDetail(userEnity.getUsername(),userEnity.getPassword(), true, true, true, true, authorities);
         user.setFullname(userEnity.getFullname());

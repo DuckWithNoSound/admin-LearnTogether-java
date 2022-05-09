@@ -1,4 +1,4 @@
-package Admin.LearnTogether.JWT;
+package Admin.LearnTogether.DTO;
 
 /*
   Created by Luvbert

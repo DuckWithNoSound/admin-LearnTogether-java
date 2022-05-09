@@ -1,6 +1,6 @@
 package Admin.LearnTogether.Config;
 
-import Admin.LearnTogether.JWT.JwtAuthenticationFilter;
+import Admin.LearnTogether.Security.JwtAuthenticationFilter;
 import Admin.LearnTogether.Security.CookieAuthenticationFilter;
 import Admin.LearnTogether.Security.CustomSuccessHandler;
 import Admin.LearnTogether.Service.UserDetailsServiceImpl;
@@ -26,6 +26,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private JwtAuthenticationFilter jwtAuthenticationFilter;
     private CookieAuthenticationFilter cookieAuthenticationFilter;
+    private static final String[] PUBLIC_ANTMATCHER = {
+            "/js/*",
+            "/css/*"
+    };
 
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CookieAuthenticationFilter cookieAuthenticationFilter){
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
@@ -57,16 +61,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService()).passwordEncoder(bCryptPasswordEncoder());
     }
 
+
     @Override
     protected void configure(HttpSecurity http) throws Exception{
-        http.csrf().disable()
+        http.cors().disable()
+                .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
+                .antMatchers(PUBLIC_ANTMATCHER).permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/logout").authenticated()
-                .antMatchers("/api/login").permitAll()
-                .antMatchers("/api/register").anonymous()
+                .antMatchers("/api/auth/login").permitAll()
+                .antMatchers("/api/auth/register").anonymous()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -88,4 +95,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
                 http.addFilterAfter(cookieAuthenticationFilter, JwtAuthenticationFilter.class);
     }
+
 }

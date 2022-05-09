@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>Login</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha512-1ycn6IcaQQ40/MKBW2W4Rhis/DbILU74C1vSrLJxCq57o941Ym01SwNsOMqvEBFlcgUa6xLiPY/NS5R+E6ztJQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- Custom fonts for this template-->
+    <link
+            href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+            rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
+</head>
+<body class="bg-gradient-primary">
+
+<div class="container">
+
+    <!-- Outer Row -->
+    <div class="row justify-content-center">
+
+        <div class="col-xl-10 col-lg-12 col-md-9">
+
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <h1 class="h4 text-gray-900 mb-4" th:text="#{lt.welcome}"></h1>
+                                </div>
+                                <form id="loginForm" class="user">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control form-control-user"
+                                               id="username" name="username" aria-describedby="usernameHelp"
+                                               th:placeholder="#{lt.login.username.placeholder}">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="password" class="form-control form-control-user"
+                                               id="password" name="password" th:placeholder="#{lt.login.password.placeholder}">
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="custom-control custom-checkbox small">
+                                            <input type="checkbox" class="custom-control-input" id="rememberCheck" name="rememberCheck">
+                                            <label class="custom-control-label" for="rememberCheck" th:text="#{lt.login.remember.text}"></label>
+                                        </div>
+                                    </div>
+                                    <a onclick="loginAPI()" class="btn btn-primary btn-user btn-block" th:text="#{lt.login.submit.text}">
+                                    </a>
+                                </form>
+                                <hr>
+                                <div class="text-center">
+                                    <a class="small" href="#" th:text="#{lt.login.forgotpassword.text}"></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- Bootstrap core JavaScript-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+<!-- Core plugin JavaScript-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3.2/jquery.easing.min.js" integrity="sha512-qJw3EXcEMHpFae2o6eQmiDc1TACjjT7xMGnMcsmDFB55XiL/6SdZEsRv08wRR+OLJ7sijqHksLHDAlbB94glxg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<!-- Custom scripts for all pages-->
+<script th:src="@{/js/main.js}"></script>
+<script>
+    function loginAPI() {
+        let jsonData = convertFormToJson($("#loginForm"));
+        $.ajax({
+            url: location.origin + "/api/auth/login",
+            method: "POST",
+            data: jsonData,
+            dataType: "json",
+            contentType: "application/json"
+        }).done(function (result) {
+            if(result.accessToken != null){
+               window.location.pathname = "/home"
+            } else {
+                alert(result.Error);
+            }
+        })
+    }
+
+
+    function convertFormToJson(form){
+        let formData = $(form).serializeArray()
+        let data = {}
+        $.each(formData, function (i, v) {
+            data[v.name + ""] = v.value
+        })
+        return JSON.stringify(data);
+    }
+</script>
+</body>
+</html>

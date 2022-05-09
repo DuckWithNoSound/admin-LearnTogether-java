@@ -8,9 +8,6 @@ import lombok.Setter;
 /*
   Created by Luvbert
 */
-@Setter
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class NewsDTO {
 }

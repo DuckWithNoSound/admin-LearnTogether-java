@@ -35,4 +35,8 @@ public class PostDTO extends AbstractDTO{
         return list;
     }
 
+    public void setListTagSlug(List<String> listTagSlug){
+        this.listTagSlug = listTagSlug.toArray(new String[0]);
+    }
+
 }

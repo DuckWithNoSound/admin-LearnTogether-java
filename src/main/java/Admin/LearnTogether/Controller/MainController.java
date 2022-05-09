@@ -15,8 +15,15 @@ public class MainController {
         return new ModelAndView("redirect:/home");
     }
 
-    @GetMapping("/home")
-    public ModelAndView homePage(){
-        return new ModelAndView("home");
+    @GetMapping("/login")
+    public String loginPage(){
+        return "login";
     }
+
+    @GetMapping("/home")
+    public String homePage(){
+        return "home";
+    }
+
+
 }

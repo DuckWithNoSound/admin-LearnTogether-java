@@ -1,0 +1,101 @@
+<%@include file="/common/taglib.jsp" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<c:url var="urlAPI" value="/api-admin-news"/>
+<!-- Begin Page Content -->
+<div class="container-fluid">
+    <div class="news-table-container">
+        <c:if test="${not empty msgMessage }">
+            <div class="alert alert-${msgAlert} alert-dismissible">
+                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                ${msgMessage}
+            </div>
+        </c:if>
+        <div class="news-create-button">
+            <a href="<c:url value='/admin-news-create'/>" data-toggle="tooltip" title="Tạo mới bài viết" class="btn btn-primary create-button">Tạo mới</a>
+            <button id="btnDelete" data-toggle="tooltip" title="Xóa bài viết" class="btn btn-primary delete-button">Xóa</button>
+        </div>
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <th scope="col" style="width: 10%;">News ID</th>
+                <th scope="col" style="width: 25%;">Title</th>
+                <th scope="col" style="width: 55%;">Content</th>
+                <th scope="col" style="width: 6%;">Sửa</th>
+                <th scope="col" style="width: 4%;"><input type="checkbox" id="ckbAll"></th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach var="item" items="${items}">
+                <tr>
+                    <th scope="row">${item.id}</th>
+                    <td>${item.title}</td>
+                    <td>${item.content}</td>
+                    <td>
+                        <a href="<c:url value='/admin-news-edit?id=${item.id}'/>" data-toggle="tooltip" title="Chỉnh sửa"><i class="fas fa-pencil-alt"></i></a>
+                    </td>
+                    <td><input type="checkbox" id="ckb_${item.id}" value="${item.id}"></td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </div>
+    <form action="<c:url value='/admin-news-all'/>" method="GET" id="paginationForm">
+        <div class="pagination-container">
+            <nav aria-label="Page navigation">
+                <ul class="pagination" id="pagination"></ul>
+                <input type="hidden" value="" name="pageIndex" id="pageIndex">
+                <input type="hidden" value="10" name="itemsPerPage" id="itemsPerPage">
+            </nav>
+        </div>
+</div>
+</form>
+<script type="text/javascript">
+    <!-- Pagination -->
+    $(function () {
+        window.pagObj = $('#pagination').twbsPagination({
+            totalPages: ${totalPages},
+            visiblePages: 5,
+            startPage: ${startPage},
+            onPageClick: function (event, page) {
+                if(${startPage} != page)
+                {
+                    $("#pageIndex").val(page);
+                    $("#paginationForm").submit();
+                }
+            }
+        });
+    });
+    <!-- CHECK AND DELETE -->
+    $(document).ready(function(){
+        $("#ckbAll").click(function () {
+            $('tbody input:checkbox').not(this).prop('checked', this.checked);
+        });
+
+        $('#btnDelete').click(function(){
+            var data = {};
+            var arr = $("tbody :checked").map(function(){
+                return $(this).val();
+            }).get();
+            data['ids'] = arr;
+            deleteNews(data);
+        });
+    });
+
+    function deleteNews(data){
+        $.ajax({
+            url: '${urlAPI}',
+            type: 'DELETE',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(data),
+            success: function(r){
+                window.location.href = "<c:url value='/admin-news-all?message=deletesuccess'/>";
+            },
+            error: function(e){
+                console.log(e);
+            }
+        });
+    }
+
+
+</script>

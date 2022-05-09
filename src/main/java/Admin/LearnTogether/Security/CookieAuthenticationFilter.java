@@ -1,7 +1,7 @@
 package Admin.LearnTogether.Security;
 
 import Admin.LearnTogether.DTO.UserDetail;
-import Admin.LearnTogether.JWT.JwtAuthService;
+import Admin.LearnTogether.Service.JwtAuthService;
 import Admin.LearnTogether.Service.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -60,14 +60,14 @@ public class CookieAuthenticationFilter extends OncePerRequestFilter {
         Map<String, String> message = new HashMap<>();
         try {
             Cookie[] cookies = request.getCookies();
-
-            String authCookie = Optional.ofNullable(cookies).flatMap(cookieArr -> Arrays.stream(cookieArr)
-                    .filter(cookie -> "AuthenticationCookie".equals(cookie.getName()))
-                    .findAny())
-                    .map(cookie -> cookie.getValue())
-                    .orElse(null);
-            if(authCookie != null) auth(authCookie, request);
-
+            if(cookies != null){
+                String authCookie = Optional.ofNullable(cookies).flatMap(cookieArr -> Arrays.stream(cookieArr)
+                        .filter(cookie -> "AuthenticationCookie".equals(cookie.getName()))
+                        .findAny())
+                        .map(cookie -> cookie.getValue())
+                        .orElse(null);
+                if(authCookie != null) auth(authCookie, request);
+            }
         } catch (MalformedJwtException malformedJwtException){
             message.put("message", "Token is invalid");
         } catch (ExpiredJwtException expiredJwtException) {

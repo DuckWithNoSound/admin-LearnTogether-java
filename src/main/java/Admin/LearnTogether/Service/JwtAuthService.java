@@ -1,4 +1,4 @@
-package Admin.LearnTogether.JWT;
+package Admin.LearnTogether.Service;
 
 import Admin.LearnTogether.DTO.UserDetail;
 import Admin.LearnTogether.Service.UserDetailsServiceImpl;
@@ -44,6 +44,20 @@ public class JwtAuthService {
                 .compact();
 
         return TOKEN_PREFIX + jwt;
+    }
+
+    //Generate a new json web token from user information
+    public String generateTokenWithoutPrefix(UserDetail user){
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
+
+        String jwt = Jwts.builder()
+                .setSubject(user.getUsername())
+                .setIssuedAt(now).setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, JWT_SECRET_KEY)
+                .compact();
+
+        return jwt;
     }
 
     //Generate a new json web token from user information

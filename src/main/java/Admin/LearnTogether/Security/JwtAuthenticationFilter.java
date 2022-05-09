@@ -1,6 +1,7 @@
-package Admin.LearnTogether.JWT;
+package Admin.LearnTogether.Security;
 
 import Admin.LearnTogether.DTO.UserDetail;
+import Admin.LearnTogether.Service.JwtAuthService;
 import Admin.LearnTogether.Service.UserDetailsServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.ExpiredJwtException;
