@@ -7,6 +7,8 @@ import Admin.LearnTogether.Entity.CommentPostEntity;
 import Admin.LearnTogether.Entity.PostEntity;
 import Admin.LearnTogether.Entity.ScorePostEntity;
 import Admin.LearnTogether.Entity.TagEntity;
+import Admin.LearnTogether.Exception.ResourceNotfoundException;
+import Admin.LearnTogether.Exception.UnAuthenticationException;
 import Admin.LearnTogether.IService.IPostService;
 import Admin.LearnTogether.IService.ITagService;
 import Admin.LearnTogether.Repo.PostRepo;
@@ -50,13 +52,8 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public PostDTO createNewPost(PostDTO postDTO) throws IllegalArgumentException, Exception {
-        String username = ((UserDetail)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        if(username == null){
-            throw new Exception("User not login !");
-        } else {
-            postDTO.setAuthorName(username);
-        }
+    public PostDTO createNewPost(PostDTO postDTO, String username) throws IllegalArgumentException, Exception {
+        postDTO.setAuthorName(username);
         if(postDTO.getTitle() == null || postDTO.getTitle().isEmpty()){
             throw new Exception("Title is empty !");
         }
@@ -73,20 +70,13 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public PostDTO findPostById(Long postID) throws IllegalArgumentException, Exception {
+    public PostDTO findPostById(Long postID) {
         Optional<PostEntity> postEntity = postRepository.findById(postID);
-        if(!postEntity.isPresent()){
-            throw new Exception("Post not found !");
-        };
         return postConverter.toDTO(postEntity.get());
     }
 
     @Override
     public PostDTO updatePost(PostDTO postDTO) throws IllegalArgumentException, Exception{
-        String username = ((UserDetail)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
-        if(username == null){
-            throw new Exception("User not login !");
-        }
         Optional<PostEntity> postEntity = postRepository.findById(postDTO.getId());
         if(!postEntity.isPresent()){
             throw new Exception("Source post not exist !");
@@ -104,7 +94,6 @@ public class PostService implements IPostService {
             entity.setTags(tags);
         }
 
-        entity.setUser(userRepository.findByUsername(username));
         postRepository.save(entity);
         return postConverter.toDTO(postRepository.findById(entity.getId()).get());
     }

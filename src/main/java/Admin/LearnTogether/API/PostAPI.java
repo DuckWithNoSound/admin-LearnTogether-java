@@ -1,11 +1,15 @@
 package Admin.LearnTogether.API;
 
 import Admin.LearnTogether.DTO.PostDTO;
+import Admin.LearnTogether.DTO.UserDetail;
+import Admin.LearnTogether.Exception.ResourceNotfoundException;
+import Admin.LearnTogether.Exception.UnAuthenticationException;
 import Admin.LearnTogether.IService.IPostService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -25,24 +29,23 @@ public class PostAPI {
     }
 
     @GetMapping(value = "/api/post/{postId}")
-    public ResponseEntity<?> getPost(@PathVariable(name = "postId") Long postId){
-
-        PostDTO foundPost;
-        try{
-            foundPost = postService.findPostById(postId);
-        } catch (Exception exception){
-            Map<String, String> message = new HashMap<>();
-            message.put("Message", "Not found: " + exception.getMessage());
-            return ResponseEntity.ok(message);
+    public ResponseEntity<?> getPost(@PathVariable(name = "postId") Long postId) throws ResourceNotfoundException {
+        PostDTO foundPost = postService.findPostById(postId);
+        if(foundPost == null){
+            throw new ResourceNotfoundException();
         }
         return ResponseEntity.ok(foundPost);
     }
 
     @PostMapping(value = "/api/post")
-    public ResponseEntity<?> createPost(@RequestBody PostDTO postDTO){
+    public ResponseEntity<?> createPost(@RequestBody PostDTO postDTO) throws UnAuthenticationException {
+        String username = ((UserDetail)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        if(username == null){
+            throw new UnAuthenticationException();
+        }
         PostDTO savedPost;
         try{
-            savedPost = postService.createNewPost(postDTO);
+            savedPost = postService.createNewPost(postDTO, username);
         } catch (Exception exception){
             Map<String, String> message = new HashMap<>();
             message.put("Message", "Create failed: " + exception.getMessage());
@@ -52,7 +55,11 @@ public class PostAPI {
     }
 
     @PutMapping(value = "/api/post")
-    public ResponseEntity<?> updatePost(@RequestBody PostDTO postDTO){
+    public ResponseEntity<?> updatePost(@RequestBody PostDTO postDTO) throws UnAuthenticationException {
+        Object user = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if(user == null){
+            throw new UnAuthenticationException();
+        }
         PostDTO savedPost;
         try{
             savedPost = postService.updatePost(postDTO);

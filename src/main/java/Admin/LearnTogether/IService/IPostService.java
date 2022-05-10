@@ -11,8 +11,8 @@ import java.util.List;
 */
 @Service
 public interface IPostService {
-    PostDTO createNewPost(PostDTO postDTO) throws Exception;
-    PostDTO findPostById(Long postID) throws Exception;
+    PostDTO createNewPost(PostDTO postDTO, String username) throws Exception;
+    PostDTO findPostById(Long postID);
     PostDTO updatePost(PostDTO postDTO) throws Exception;
     boolean deletePost(Long[] arrPostId) throws Exception;
     List<PostDTO> findAll(Pageable pageRequest) throws Exception;
